@@ -1,0 +1,15 @@
+
+
+table{
+  margin: 0 auto;
+  padding-top: 15px;
+
+  & td, th{
+    border: solid 1px black;
+    text-align: center;
+  }
+
+  & tr:first-of-type(){
+    border-bottom: 3px solid black;
+  }
+}
