@@ -37,11 +37,9 @@ const fetchDrivers = async () => {
 
 const efficientlySortDrivers = async (drivers) => {
   return await drivers.map(driver => {
-    if (driver.previousEvent < 16) {
-      driver["pointEfficiencyRate"] = placePointsPair[driver.previousEvent] / driver.cost;
-    } else {
-      driver["pointEfficiencyRate"] = 0;
-    }
+    let totalPoints = (placePointsPair[driver.prevRace1Position] || 0) + (placePointsPair[driver.prevRace2Position] || 0) + (placePointsPair[driver.prevRace3Position] || 0);
+    driver["totalPointsFromPrevEvents"] = totalPoints;
+    driver["pointEfficiencyRate"] = totalPoints / driver.cost;
     return driver
   })
     .sort((driverA, driverB) => {
@@ -51,16 +49,6 @@ const efficientlySortDrivers = async (drivers) => {
       return (driverB.pointEfficiencyRate - driverA.pointEfficiencyRate)
     })
 }
-
-let i = 0;
-
-// const printDrivers = async (drivers) => {
-//     drivers.forEach( driver => {
-//         console.log(driver.name.padStart(20, " ") + " " + driver.pointEfficiencyRate.toString().slice(0, 4).padEnd(5, " ") + " " + driver.cost);
-//     })
-// }
-
-// let drivers = [1, 2];
 
 function App() {
 
@@ -78,25 +66,56 @@ function App() {
 
   return (
     <div id='main'>
+      <h3>Motogp Ignition</h3>
+      <h4>Driver points from last 3 races</h4>
       <table>
-        <tr>
-          <th>NAME</th>
-          <th>POINTS/COST</th>
-          <th>COST($M)</th>
-          <th>PREV.EVENT plc</th>
-          <th>avg.POINTS</th>
-        </tr>
-        {
-          drivers.map(driver => (
-            <tr key={i++}>
-              <td> {driver.name} </td>
-              <td> {driver.pointEfficiencyRate.toString().slice(0, 4)} </td>
-              <td> {driver.cost} </td>
-              <td> {driver.previousEvent} </td>
-              <td> {placePointsPair[driver.previousEvent] || "0"} </td>
-            </tr>
-          ))
-        }
+        <tbody>
+          <tr>
+            <th>Place</th>
+            {
+              Object.entries(placePointsPair).map( (item, i) => (
+                <td key={i}>{item[0]}</td>
+              ))
+            }
+          </tr>
+          <tr>
+            <th>Points</th>
+            {
+              Object.entries(placePointsPair).map( (item, i) => (
+                <td key={i}>{item[1]}</td>
+              ))
+            }
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>POINTS/COST</th>
+            <th>COST($M)</th>
+            <th>prev.ev.tot.pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            drivers.map(driver => (
+              <tr key={driver.id}>
+                <td> {driver.name} </td>
+                <td> {driver.pointEfficiencyRate.toString().slice(0, 4)} </td>
+                <td> {driver.cost} </td>
+                <td>
+                  <span className='analyticPoints'>
+                    {`(${placePointsPair[driver.prevRace1Position] || "0"}+${placePointsPair[driver.prevRace2Position] || "0"}+${placePointsPair[driver.prevRace3Position] || "0"})`}
+                  </span>
+                  <span style={{ fontWeight: 'bold' }}>
+                    ={driver.totalPointsFromPrevEvents}
+                  </span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
       </table>
     </div>
   );

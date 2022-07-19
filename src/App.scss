@@ -1,4 +1,9 @@
 
+h3, h4{
+  text-align: center;
+  margin: 2px 0;
+
+}
 
 table{
   margin: 0 auto;
@@ -12,4 +17,9 @@ table{
   & tr:first-of-type(){
     border-bottom: 3px solid black;
   }
+}
+
+.analyticPoints{
+  font-size: 13px;
+  font-style: italic;
 }
