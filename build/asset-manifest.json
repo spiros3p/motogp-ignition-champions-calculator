@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/motogp-ignition-champions-calculator/static/css/main.0c8b1178.css",
-    "main.js": "/motogp-ignition-champions-calculator/static/js/main.c80da08d.js",
+    "main.css": "/motogp-ignition-champions-calculator/static/css/main.712d6f97.css",
+    "main.js": "/motogp-ignition-champions-calculator/static/js/main.7483fb31.js",
     "index.html": "/motogp-ignition-champions-calculator/index.html",
-    "main.0c8b1178.css.map": "/motogp-ignition-champions-calculator/static/css/main.0c8b1178.css.map",
-    "main.c80da08d.js.map": "/motogp-ignition-champions-calculator/static/js/main.c80da08d.js.map"
+    "main.712d6f97.css.map": "/motogp-ignition-champions-calculator/static/css/main.712d6f97.css.map",
+    "main.7483fb31.js.map": "/motogp-ignition-champions-calculator/static/js/main.7483fb31.js.map"
   },
   "entrypoints": [
-    "static/css/main.0c8b1178.css",
-    "static/js/main.c80da08d.js"
+    "static/css/main.712d6f97.css",
+    "static/js/main.7483fb31.js"
   ]
 }

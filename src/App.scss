@@ -1,25 +1,159 @@
-
-h3, h4{
-  text-align: center;
-  margin: 2px 0;
-
+body {
+  background-color: antiquewhite;
+  color: rgb(44, 44, 53);
+  position: relative;
 }
 
-table{
-  margin: 0 auto;
-  padding-top: 15px;
+div#notification {
+  position: fixed;
+  z-index: 99;
+  left: -170px;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: antiquewhite;
+  border-radius: 5px;
+  height: 35px;
+  width: 165px;
+  transition: left 0.3s;
 
-  & td, th{
+  &.appear {
+    left: 1px;
+    transition: left 0.3s;
+  }
+}
+
+h3,
+h4 {
+  text-align: center;
+  margin: 2px 0;
+}
+
+table {
+  margin: 0 auto;
+  // padding-top: 15px;
+  padding-top: 1px;
+
+  & td,
+  th {
     border: solid 1px black;
     text-align: center;
   }
 
-  & tr:first-of-type(){
+  & tr:first-of-type() {
     border-bottom: 3px solid black;
   }
 }
 
-.analyticPoints{
+.analyticPoints {
   font-size: 13px;
   font-style: italic;
+}
+
+tr.driver {
+  background-color: transparent;
+  transition: all 0.3s linear;
+  cursor: grab;
+
+  &.selected {
+    background-color: aqua;
+  }
+
+  &:hover {
+    background-color: rgb(196, 196, 196);
+    transition: all 0.3s linear;
+  }
+}
+
+div.myTeam {
+  position: sticky;
+  top: 0;
+  background-color: darkcyan;
+  color: antiquewhite;
+  text-align: center;
+  padding-bottom: 4px;
+
+  & button.btn {
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+
+    &-red {
+      background-color: red;
+      color: antiquewhite;
+    }
+  }
+
+  & #total-cost {
+    font-weight: 800;
+    color: darkviolet;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1px;
+    margin-bottom: 1px;
+
+    & li {
+      & span.itemName {
+        min-width: 145px;
+        display: inline-block;
+      }
+      & span.itemCost{
+        display: inline-block;
+        width: 40px;
+      }
+    }
+  }
+}
+
+div.manufacturers {
+  margin: 2px auto;
+  display: flex;
+  justify-content: center;
+
+  & .titles {
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    border: 1px solid rgb(44, 44, 53);
+    margin-right: 3px;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+
+    & li {
+      margin-right: 2px;
+      min-width: 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgb(44, 44, 53);
+
+      background-color: transparent;
+      transition: all 0.3s linear;
+      cursor: grab;
+
+      &.selected {
+        background-color: aqua;
+      }
+
+      &:hover {
+        background-color: rgb(196, 196, 196);
+        transition: all 0.3s linear;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
 }
