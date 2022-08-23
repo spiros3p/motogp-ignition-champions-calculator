@@ -181,8 +181,9 @@ function App() {
         <thead>
           <tr>
             <th>NAME</th>
-            <th>POINTS/COST</th>
-            <th>COST($M)</th>
+            <th>TEAM</th>
+            <th>P/C</th>
+            <th>C($M)</th>
             <th>prev.ev.tot.pts</th>
           </tr>
         </thead>
@@ -191,6 +192,7 @@ function App() {
             drivers.map(driver => (
               <tr key={driver.id} className={`driver ${myTeam.includes(driver) ? 'selected' : ''}`} onClick={() => { toggleItemToMyTeam(driver); }}>
                 <td> {driver.name} </td>
+                <td> {driver.manufacturerName} </td>
                 <td> {driver.pointEfficiencyRate.toString().slice(0, 4)} </td>
                 <td> {driver.cost} </td>
                 <td>
