@@ -46,19 +46,27 @@ const fetchManufacturers = async () => {
   }
 }
 
-const efficientlySortDrivers = async (drivers) => {
+const upgradeDriversList = async (drivers) => {
   return await drivers.map(driver => {
-    let totalPoints = (placePointsPair[driver.prevRace1Position] || 0) + (placePointsPair[driver.prevRace2Position] || 0) + (placePointsPair[driver.prevRace3Position] || 0);
-    driver["totalPointsFromPrevEvents"] = totalPoints;
-    driver["pointEfficiencyRate"] = totalPoints / driver.cost;
-    return driver
-  })
-    .sort((driverA, driverB) => {
+  let totalPoints = (placePointsPair[driver.prevRace1Position] || 0) + (placePointsPair[driver.prevRace2Position] || 0) + (placePointsPair[driver.prevRace3Position] || 0);
+  driver["totalPointsFromPrevEvents"] = totalPoints;
+  driver["pointEfficiencyRate"] = totalPoints / driver.cost;
+  return driver
+})}
+
+const onSortDriversByEfficiency = async (drivers) => {
+  return await drivers.sort((driverA, driverB) => {
       if (driverA.pointEfficiencyRate === 0 && driverB.pointEfficiencyRate === 0) {
         return (driverB.previousEvent - driverA.previousEvent)
       }
       return (driverB.pointEfficiencyRate - driverA.pointEfficiencyRate)
     })
+}
+
+const onSortDriversByPoints = async (drivers) => {
+  return await drivers.sort((driverA, driverB) => {
+    return driverB.totalPointsFromPrevEvents - driverA.totalPointsFromPrevEvents
+  })
 }
 
 let myTeamTotalCost = 0;
@@ -70,16 +78,30 @@ function App() {
   const [myTeam, setMyTeam] = useState([]);
   const [manufacturers, setManufacturers] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
+  // const [initDrivers, setInitDrivers] = useState([]);
 
   const getDrivers = async () => {
     let driversArray = await fetchDrivers();
-    driversArray = await efficientlySortDrivers(driversArray);
+    driversArray = await upgradeDriversList(driversArray);
+    driversArray = await onSortDriversByEfficiency(driversArray);
     setDrivers(driversArray);
   }
 
   const getManufacturers = async () => {
     let manufacturersArray = await fetchManufacturers();
     setManufacturers(manufacturersArray);
+  }
+
+  const sortDriversByPoints = async () => {
+    let newDrivers = await onSortDriversByPoints(drivers);
+    console.log(newDrivers[0]);
+    setDrivers([...newDrivers]);
+  }
+
+  const sortDriversByEfficiency = async () => {
+    let newDrivers = await onSortDriversByEfficiency(drivers);
+    console.log(newDrivers[0]);
+    setDrivers([...newDrivers]);
   }
 
   const toggleItemToMyTeam = async (item) => {
@@ -96,7 +118,7 @@ function App() {
           driversNumber += 1;
         }
       }
-      if ((manufacturersNumber === 1 && Object.getOwnPropertyNames(item).includes("numRiders")) || (driversNumber === 4 && Object.getOwnPropertyNames(item).includes("totalPodiums")) ) {
+      if ((manufacturersNumber === 1 && Object.getOwnPropertyNames(item).includes("numRiders")) || (driversNumber === 4 && Object.getOwnPropertyNames(item).includes("totalPodiums"))) {
         setShowNotification(true);
         setTimeout(() => setShowNotification(false), 2000);
         return
@@ -112,10 +134,30 @@ function App() {
     }
   }
 
+  const showDriver = () => console.log(drivers[0]);
+
   useEffect(() => {
     getDrivers();
     getManufacturers();
   }, []);
+
+  const renderDriverList = drivers.map(driver => {
+    // console.log("driver");
+    return <tr key={driver.id} className={`driver ${myTeam.includes(driver) ? 'selected' : ''}`} onClick={() => { toggleItemToMyTeam(driver); }}>
+      <td> {driver?.name} </td>
+      <td> {driver?.manufacturerName} </td>
+      <td style={{ fontWeight: 'bold' }}> {driver?.pointEfficiencyRate.toString().slice(0, 4)} </td>
+      <td> {driver?.cost} </td>
+      <td>
+        <span className='analyticPoints'>
+          {`(${placePointsPair[driver?.prevRace1Position] || "0"}+${placePointsPair[driver?.prevRace2Position] || "0"}+${placePointsPair[driver?.prevRace3Position] || "0"})`}
+        </span>
+        <span style={{ fontWeight: 'bold' }}>
+          ={driver?.totalPointsFromPrevEvents}
+        </span>
+      </td>
+    </tr>
+  })
 
   return (
     <div id='main'>
@@ -182,30 +224,13 @@ function App() {
           <tr>
             <th>NAME</th>
             <th>TEAM</th>
-            <th>P/C</th>
+            <th onClick={sortDriversByEfficiency} className="selectable-title">P/C↓</th>
             <th>C($M)</th>
-            <th>prev.ev.tot.pts</th>
+            <th onClick={sortDriversByPoints} className="selectable-title">prev.ev.tot.pts↓</th>
           </tr>
         </thead>
         <tbody>
-          {
-            drivers.map(driver => (
-              <tr key={driver.id} className={`driver ${myTeam.includes(driver) ? 'selected' : ''}`} onClick={() => { toggleItemToMyTeam(driver); }}>
-                <td> {driver.name} </td>
-                <td> {driver.manufacturerName} </td>
-                <td> {driver.pointEfficiencyRate.toString().slice(0, 4)} </td>
-                <td> {driver.cost} </td>
-                <td>
-                  <span className='analyticPoints'>
-                    {`(${placePointsPair[driver.prevRace1Position] || "0"}+${placePointsPair[driver.prevRace2Position] || "0"}+${placePointsPair[driver.prevRace3Position] || "0"})`}
-                  </span>
-                  <span style={{ fontWeight: 'bold' }}>
-                    ={driver.totalPointsFromPrevEvents}
-                  </span>
-                </td>
-              </tr>
-            ))
-          }
+          {renderDriverList}
         </tbody>
       </table>
     </div>
