@@ -96,25 +96,25 @@ function App() {
   }
 
   const addPointsToManufacturers = async (manufacturersArray) => {
-    manufacturersArray = await [...manufacturersArray].map( team => {
+    manufacturersArray = await [...manufacturersArray].map(team => {
       let teamsDay1 = [];
       let teamsDay2 = [];
       let teamsDay3 = [];
       // console.log(team.name);
-      for (let driver of drivers){
-        if (driver.manufacturerName === team.name){
+      for (let driver of drivers) {
+        if (driver.manufacturerName === team.name) {
           teamsDay1.push(placePointsPair[driver?.prevRace1Position] || 0);
           teamsDay2.push(placePointsPair[driver?.prevRace2Position] || 0);
           teamsDay3.push(placePointsPair[driver?.prevRace3Position] || 0);
         }
       }
-      teamsDay1 = teamsDay1.sort((a,b)=>b-a);
+      teamsDay1 = teamsDay1.sort((a, b) => b - a);
       teamsDay1 = [teamsDay1[0], teamsDay1[1]];
       team["pointsDay1"] = teamsDay1;
-      teamsDay2 = teamsDay2.sort((a,b)=>b-a);
+      teamsDay2 = teamsDay2.sort((a, b) => b - a);
       teamsDay2 = [teamsDay2[0], teamsDay2[1]];
       team["pointsDay2"] = teamsDay2;
-      teamsDay3 = teamsDay3.sort((a,b)=>b-a);
+      teamsDay3 = teamsDay3.sort((a, b) => b - a);
       teamsDay3 = [teamsDay3[0], teamsDay3[1]];
       team["pointsDay3"] = teamsDay3;
       return team
@@ -179,8 +179,9 @@ function App() {
       <td style={{ fontWeight: 'bold' }}> {driver?.pointEfficiencyRate.toString().slice(0, 4)} </td>
       <td> {driver?.cost} </td>
       <td>
-        <span className='analyticPoints'>
-          {`(${placePointsPair[driver?.prevRace1Position] || "0"}+${placePointsPair[driver?.prevRace2Position] || "0"}+${placePointsPair[driver?.prevRace3Position] || "0"})`}
+        <span className='analyticPoints'>(
+          <span className='first-day-points'>{ placePointsPair[driver?.prevRace1Position] || "0" }</span>
+          {`+${placePointsPair[driver?.prevRace2Position] || "0"}+${placePointsPair[driver?.prevRace3Position] || "0"})`}
         </span>
         <span style={{ fontWeight: 'bold' }}>
           ={driver?.totalPointsFromPrevEvents}
@@ -237,7 +238,7 @@ function App() {
           <span>COST</span>
           <span>LAST POS</span>
 
-          <span>Day1</span>
+          <span className='first-day-points'>Day1</span>
           <span>Day2</span>
           <span>Day3</span>
           <span>Tot.Pnts</span>
@@ -250,22 +251,22 @@ function App() {
                 <span>{manufacturer.cost} $</span>
                 <span>{manufacturer.previousEvent}</span>
                 <div>
-                  <span style={{fontSize: '0.8rem'}}>{`(${manufacturer.pointsDay1[0]}&${manufacturer.pointsDay1[1]})`}</span>
-                  <span style={{ fontWeight: 'bold' }}>{ Math.ceil( (manufacturer.pointsDay1[0]+manufacturer.pointsDay1[1])/2 ) }</span>
+                  <span style={{ fontSize: '0.8rem' }}>{`(${manufacturer.pointsDay1[0]}&${manufacturer.pointsDay1[1]})`}</span>
+                  <span  className='first-day-points'>{Math.ceil((manufacturer.pointsDay1[0] + manufacturer.pointsDay1[1]) / 2)}</span>
                 </div>
                 <div>
-                  <span style={{fontSize: '0.8rem'}}>{`(${manufacturer.pointsDay2[0]}&${manufacturer.pointsDay2[1]})`}</span>
-                  <span style={{ fontWeight: 'bold' }}>{ Math.ceil( (manufacturer.pointsDay2[0]+manufacturer.pointsDay2[1])/2 ) }</span>
+                  <span style={{ fontSize: '0.8rem' }}>{`(${manufacturer.pointsDay2[0]}&${manufacturer.pointsDay2[1]})`}</span>
+                  <span style={{ fontWeight: 'bold' }}>{Math.ceil((manufacturer.pointsDay2[0] + manufacturer.pointsDay2[1]) / 2)}</span>
                 </div>
                 <div>
-                  <span style={{fontSize: '0.8rem'}}>{`(${manufacturer.pointsDay3[0]}&${manufacturer.pointsDay3[1]})`}</span>
-                  <span style={{ fontWeight: 'bold' }}>{ Math.ceil( (manufacturer.pointsDay3[0]+manufacturer.pointsDay3[1])/2 ) }</span>
+                  <span style={{ fontSize: '0.8rem' }}>{`(${manufacturer.pointsDay3[0]}&${manufacturer.pointsDay3[1]})`}</span>
+                  <span style={{ fontWeight: 'bold' }}>{Math.ceil((manufacturer.pointsDay3[0] + manufacturer.pointsDay3[1]) / 2)}</span>
                 </div>
                 <span style={{ fontWeight: 'bold' }}>
                   {
-                    Math.ceil( (manufacturer.pointsDay1[0]+manufacturer.pointsDay1[1])/2 ) 
-                    + Math.ceil( (manufacturer.pointsDay2[0]+manufacturer.pointsDay2[1])/2 )
-                    + Math.ceil( (manufacturer.pointsDay3[0]+manufacturer.pointsDay3[1])/2 )
+                    Math.ceil((manufacturer.pointsDay1[0] + manufacturer.pointsDay1[1]) / 2)
+                    + Math.ceil((manufacturer.pointsDay2[0] + manufacturer.pointsDay2[1]) / 2)
+                    + Math.ceil((manufacturer.pointsDay3[0] + manufacturer.pointsDay3[1]) / 2)
                   }
                 </span>
               </li>
