@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const placePointsPair = {
   "1": 25,
   "2": 20,
-  "3": 15,
+  "3": 16,
   "4": 13,
   "5": 11,
   "6": 10,
